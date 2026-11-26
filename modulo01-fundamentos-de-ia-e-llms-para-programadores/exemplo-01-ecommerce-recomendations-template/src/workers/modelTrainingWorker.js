@@ -9,6 +9,8 @@ async function trainModel({ users }) {
     console.log('Training model with users:', users)
 
     postMessage({ type: workerEvents.progressUpdate, progress: { progress: 50 } });
+    const catalog = await (await fetch('/data/products.json')).json();
+    context  = makeContext(catalog, users);
     postMessage({
         type: workerEvents.trainingLog,
         epoch: 1,
@@ -31,7 +33,6 @@ function recommend(user, ctx) {
     //     recommendations: []
     // });
 }
-
 
 const handlers = {
     [workerEvents.trainModel]: trainModel,
